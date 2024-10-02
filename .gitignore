@@ -1,0 +1,8 @@
+# only need to save the code, but not the raw data
+*pdf
+*json
+*zip
+index/
+
+# mac stuff
+.DS_Store
