@@ -6,3 +6,8 @@ index/
 
 # mac stuff
 .DS_Store
+
+# others
+__pycache__
+00_archived/
+logs/
