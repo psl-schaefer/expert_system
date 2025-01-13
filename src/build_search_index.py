@@ -119,6 +119,7 @@ async def build_search_index(
         bib_dict_doc = bib_dict[str(rel_file_path)]
         if "author" in bib_dict_doc.keys():
             bib_dict_doc["authors"] = _format_authors(bib_dict_doc["author"])
+            bib_dict_doc["authors"] = [auth.replace("{", "").replace("}", "") for auth in bib_dict_doc["authors"]]
 
         parse_config = settings.parsing
         dockey = md5sum(abs_file_path)
@@ -172,8 +173,6 @@ async def build_search_index(
 
         # see also CROSSREF_API_MAPPING, SEMANTIC_SCHOLAR_API_MAPPING
         doc_details_dict = {k: bib_dict_doc[k] for k in BIBTEX_ATTR if k in bib_dict_doc.keys()}
-        # cleaning
-        doc_details_dict["authors"] = [auth.replace("{", "").replace("}", "") for auth in doc_details_dict["authors"]]
         doc_details = DocDetails(**doc_details_dict)
         doc_details.dockey = doc.dockey
         doc_details.doc_id = doc.dockey
@@ -230,10 +229,10 @@ async def build_search_index(
             document=docs_for_single_doc,
         )
 
-    # Save so we can resume the build without rebuilding this file if a
-    # separate process_file invocation leads to a segfault or crash
-    await search_index.save_index()
-    
+        # Save so we can resume the build without rebuilding this file
+        # TODO: Check if saving it after adding one file adds to mcuh overhead
+        await search_index.save_index()
+        
     return search_index
 
 
