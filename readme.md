@@ -54,16 +54,28 @@ mamba activate paperqa-env
 
 ## Using PaperQA
 
+- [PaperQA2](https://github.com/Future-House/paper-qa), also provides a detailed documentation here: https://github.com/Future-House/paper-qa?tab=readme-ov-file#library-usage
+
 - Here, we follow the step from the `tutorial.ipynb` notebook.
 
-1. Import all required packages into the python session
+0. Import all required packages into the python session
 
 ```python
+import os
 from pathlib import Path
 from paperqa.settings import Settings, AgentSettings, IndexSettings, AnswerSettings
 from src.build_search_index import process_bibtex_and_pdfs, create_manifest_file, build_search_index
 from src.query_answer_index import query_answer_index
 from src.utils import pretty_print_text
+```
+
+1. Since PaperQA uses LLMs, we either need to host one locally, or we need to provide API keys for cloud-based LLMs like DeepSeek or OpenAI. Here is a small code chunk to check whether API keys are set as environment variables.
+
+```python
+API_KEYS = ["DEEPSEEK_API_KEY", "OPENAI_API_KEY"]
+for api_key in API_KEYS:
+    if (key := os.getenv(api_key)):
+        print(f"{api_key} found")
 ```
 
 2. Use bibtex file to create a `manifest.csv` file which is required input for PaperQA
