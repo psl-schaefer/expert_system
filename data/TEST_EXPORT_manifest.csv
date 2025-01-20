@@ -1,11 +1,11 @@
-,index,title,doi,file_location
-0,0,Multiple Sclerosis,10.1038/s41572-018-0041-4,data/TEST_EXPORT/files/27954/Filippi et al. - 2018 - Multiple sclerosis.pdf
-1,0,Fluid Biomarkers in Multiple Sclerosis: From Current to Future Applications,10.1016/j.lanepe.2024.101009,data/TEST_EXPORT/files/27953/Filippo et al. - 2024 - Fluid biomarkers in multiple sclerosis from current to future applications.pdf
-2,0,Multiple Sclerosis - Remyelination Failure as a Cause of Disease Progression,10.14670/HH-27.277,data/TEST_EXPORT/files/27960/Hagemeier et al. - 2012 - Multiple sclerosis - remyelination failure as a cause of disease progression.pdf
-3,0,Secreted Immune Metabolites That Mediate Immune Cell Communication and Function,10.1016/j.it.2022.10.006,data/TEST_EXPORT/files/27978/Zhang et al. - 2022 - Secreted immune metabolites that mediate immune cell communication and function.pdf
-4,0,{{NF-$\kappa$B}} Dynamics in the Language of Immune Cells,10.1016/j.it.2022.11.005,data/TEST_EXPORT/files/27981/Aqdas and Sung - 2023 - NF-κB dynamics in the language of immune cells.pdf
-5,0,{{TCR}} Sequencing Paired with Massively Parallel 3{$\prime$} {{RNA-seq}} Reveals Clonotypic {{T}} Cell Signatures,10.1038/s41590-019-0544-5,data/TEST_EXPORT/files/27983/Tu et al. - 2019 - TCR sequencing paired with massively parallel 3′ RNA-seq reveals clonotypic T cell signatures.pdf
-6,0,Dual {{TCR T Cells}}: {{Identity Crisis}} or {{Multitaskers}}?,10.4049/jimmunol.1800904,data/TEST_EXPORT/files/27986/Schuldt and Binstadt - 2019 - Dual TCR T Cells Identity Crisis or Multitaskers.pdf;files/27985/Dual-TCR-T-Cells-Identity-Crisis-or-Multitaskers.html
-7,0,The Immunoregulatory Landscape of Human Tuberculosis Granulomas,10.1038/s41590-021-01121-x,data/TEST_EXPORT/files/27990/McCaffrey et al. - 2022 - The immunoregulatory landscape of human tuberculosis granulomas.pdf
-8,0,Hematopoiesis in Numbers,10.1016/j.it.2021.10.006,data/TEST_EXPORT/files/27993/Cosgrove et al. - 2021 - Hematopoiesis in numbers.pdf
-9,0,{$A\beta$} {{T}} Cell Receptors as Predictors of Health and Disease,10.1038/cmi.2014.134,data/TEST_EXPORT/files/27995/Attaf et al. - 2015 - αβ T cell receptors as predictors of health and disease.pdf
+title,doi,file_location
+Multiple Sclerosis,10.1038/s41572-018-0041-4,data/TEST_EXPORT/files/27954/Filippi et al. - 2018 - Multiple sclerosis.pdf
+Fluid Biomarkers in Multiple Sclerosis: From Current to Future Applications,10.1016/j.lanepe.2024.101009,data/TEST_EXPORT/files/27953/Filippo et al. - 2024 - Fluid biomarkers in multiple sclerosis from current to future applications.pdf
+Multiple Sclerosis - Remyelination Failure as a Cause of Disease Progression,10.14670/HH-27.277,data/TEST_EXPORT/files/27960/Hagemeier et al. - 2012 - Multiple sclerosis - remyelination failure as a cause of disease progression.pdf
+Secreted Immune Metabolites That Mediate Immune Cell Communication and Function,10.1016/j.it.2022.10.006,data/TEST_EXPORT/files/27978/Zhang et al. - 2022 - Secreted immune metabolites that mediate immune cell communication and function.pdf
+{{NF-$\kappa$B}} Dynamics in the Language of Immune Cells,10.1016/j.it.2022.11.005,data/TEST_EXPORT/files/27981/Aqdas and Sung - 2023 - NF-κB dynamics in the language of immune cells.pdf
+{{TCR}} Sequencing Paired with Massively Parallel 3{$\prime$} {{RNA-seq}} Reveals Clonotypic {{T}} Cell Signatures,10.1038/s41590-019-0544-5,data/TEST_EXPORT/files/27983/Tu et al. - 2019 - TCR sequencing paired with massively parallel 3′ RNA-seq reveals clonotypic T cell signatures.pdf
+Dual {{TCR T Cells}}: {{Identity Crisis}} or {{Multitaskers}}?,10.4049/jimmunol.1800904,data/TEST_EXPORT/files/27986/Schuldt and Binstadt - 2019 - Dual TCR T Cells Identity Crisis or Multitaskers.pdf
+The Immunoregulatory Landscape of Human Tuberculosis Granulomas,10.1038/s41590-021-01121-x,data/TEST_EXPORT/files/27990/McCaffrey et al. - 2022 - The immunoregulatory landscape of human tuberculosis granulomas.pdf
+Hematopoiesis in Numbers,10.1016/j.it.2021.10.006,data/TEST_EXPORT/files/27993/Cosgrove et al. - 2021 - Hematopoiesis in numbers.pdf
+{$A\beta$} {{T}} Cell Receptors as Predictors of Health and Disease,10.1038/cmi.2014.134,data/TEST_EXPORT/files/27995/Attaf et al. - 2015 - αβ T cell receptors as predictors of health and disease.pdf
