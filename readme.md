@@ -17,7 +17,7 @@ mamba activate paperqa-env
 2. Install [PaperQA2](https://github.com/Future-House/paper-qa) from my fork into your conda environment
 
 ```bash
-python -m pip install git+https://github.com/psl-schaefer/paper-qa@optional_api_calls
+python -m pip install git+https://github.com/psl-schaefer/paper-qa
 ```
 
 - The original repository required API keys to retrieve metadata. In this fork, these API calls are optional, using Zotero metadata instead.
