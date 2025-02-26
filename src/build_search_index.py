@@ -55,7 +55,7 @@ async def build_search_index(
     already_indexed_files = await search_index.index_files
 
     paper_directory = anyio.Path(index_settings.paper_directory)
-
+    # p = [file async for file in paper_directory.rglob("*") if (file.suffix in {".pdf"})]
     valid_papers_rel_file_paths = [
         file.relative_to(paper_directory)
         async for file in (
@@ -63,9 +63,9 @@ async def build_search_index(
             if index_settings.recurse_subdirectories
             else paper_directory.iterdir()
         )
-        # NOTE 1: I only include PDFs here and not {".txt", ".pdf", ".html"}
+        # NOTE 1: I only include PDFs here and not {".txt", ".html"}
         # NOTE 2: I only include PDFs that are in my manifest file
-        if (file.suffix in {".pdf"}) and (str(file) in manifest_df["file_location"].to_numpy())
+        if (file.suffix in {".pdf"}) and (str(file.relative_to(paper_directory)) in manifest_df["file_location"].to_numpy())
     ]
     logger.info(f"Found {valid_papers_rel_file_paths} Valid PDFs")
 
@@ -111,7 +111,7 @@ async def build_search_index(
 
         logger.debug(f"Start indexing {rel_file_path}")
 
-        docs_for_single_doc = Docs() # otherwise creating Docs object for single doc confuses me
+        docs_for_single_doc = Docs() # here creating Docs object for single doc!
 
         abs_file_path = settings.paper_directory / rel_file_path
 
@@ -123,25 +123,26 @@ async def build_search_index(
         parse_config = settings.parsing
         dockey = md5sum(abs_file_path)
 
-        llm_model = settings.get_llm()
-
-        texts = read_doc(
-                abs_file_path,
-                Doc(docname="", citation="", dockey=dockey),  # Fake doc
-                chunk_chars=parse_config.chunk_size,
-                overlap=parse_config.overlap,
-                page_size_limit=parse_config.page_size_limit,
-            )
-
-        if not texts:
-            raise ValueError(f"Could not read document {abs_file_path}. Is it empty?")
-
-        result = await llm_model.run_prompt(
-            prompt=parse_config.citation_prompt,
-            data={"text": texts[0].text},
-            system_prompt=None,  # skip system because it's too hesitant to answer
-        )
-        citation = result.text
+        #llm_model = settings.get_llm()
+        #
+        #texts = await read_doc(
+        #        abs_file_path,
+        #        Doc(docname="", citation="", dockey=dockey),  # Fake doc
+        #        chunk_chars=parse_config.chunk_size,
+        #        overlap=parse_config.overlap,
+        #        page_size_limit=parse_config.page_size_limit,
+        #    )
+        #
+        #if not texts:
+        #    raise ValueError(f"Could not read document {abs_file_path}. Is it empty?")
+        #
+        #result = await llm_model.run_prompt(
+        #    prompt=parse_config.citation_prompt,
+        #    data={"text": texts[0].text},
+        #    system_prompt=None,  # skip system because it's too hesitant to answer
+        #)
+        #citation = result.text
+        citation = _format_mla_citation(bib_entry=bib_dict_doc)
 
         if (
             len(citation) < 3  # noqa: PLR2004
@@ -186,9 +187,9 @@ async def build_search_index(
 
         embedding_model = settings.get_embedding_model()
 
-        texts = read_doc(
-            abs_file_path,
-            doc,
+        texts = await read_doc(
+            path=abs_file_path,
+            doc=doc,
             chunk_chars=parse_config.chunk_size,
             overlap=parse_config.overlap,
             page_size_limit=parse_config.page_size_limit,
@@ -315,7 +316,9 @@ def process_bibtex_and_pdfs(bibtex_file: os.PathLike, paper_directory: os.PathLi
                 logging.info(f"Kept first PDF for: {entry['title']}")
             else:
                 # Merge PDFs if lengths differ
-                merged_pdf_path = str(paper_directory / f"{Path(valid_pdfs[0]).stem}_merged.pdf")
+                #merged_pdf_path = str(paper_directory / f"{Path(valid_pdfs[0]).stem}.pdf")
+                merged_pdf_path = Path(valid_pdfs[0])#.relative_to(paper_directory)
+                #merged_pdf_path = merged_pdf_path.with_name(merged_pdf_path.stem + "_merged.pdf")
                 _merge_pdfs(valid_pdfs, merged_pdf_path)
                 selected_pdf = merged_pdf_path
                 logging.info(f"Merged PDFs for: {entry['title']}")
@@ -329,7 +332,7 @@ def process_bibtex_and_pdfs(bibtex_file: os.PathLike, paper_directory: os.PathLi
     return pd.DataFrame(processed_entries)
 
 
-def create_manifest_file(manifest_df: pd.DataFrame, manifest_file: os.PathLike):
+def create_manifest_file(manifest_df: pd.DataFrame, manifest_file: os.PathLike, paper_directory: os.PathLike):
     """
     Creates a manifest file from a DataFrame.
 
@@ -342,7 +345,7 @@ def create_manifest_file(manifest_df: pd.DataFrame, manifest_file: os.PathLike):
     for idx, exists in enumerate(file_exists):
         if not exists:
             logging.warning(f"{manifest_df.loc[idx, 'file_location']} does not exist")
-
+    manifest_df["file_location"] = [str(Path(f_loc).relative_to(paper_directory)) for f_loc in manifest_df["file_location"]]
     logging.info(f"Number of entries with existing files: {file_exists.sum()}")
     manifest_df.to_csv(manifest_file, index=False)
     logging.info(f"Manifest file written to {manifest_file}")
@@ -359,3 +362,33 @@ def _merge_pdfs(pdf_paths, output_path):
         with pymupdf.open(pdf) as doc:
             merged_doc.insert_pdf(doc)  # Append each PDF
     merged_doc.save(output_path)
+
+def _format_mla_citation(bib_entry: dict) -> str:
+    authors = bib_entry.get("authors", [])
+    year = bib_entry.get("year", "")
+    title = bib_entry.get("title", "")
+    publisher = bib_entry.get("publisher", "")
+    doi = bib_entry.get("doi", "")
+    month = bib_entry.get("month", "")
+
+    # Format author names
+    if len(authors) == 1:
+        author_str = authors[0]
+    elif len(authors) == 2:
+        author_str = f"{authors[0]} and {authors[1]}"
+    elif len(authors) > 2:
+        author_str = f"{authors[0]}, et al."
+    else:
+        author_str = ""
+    
+    # Format date
+    date_str = f"{month} {year}" if month else year
+    
+    # Format citation
+    citation = f"{author_str}. \"{title}.\" {publisher}, {date_str}."
+    
+    # Append DOI if available
+    if doi:
+        citation += f" DOI: {doi}."
+    
+    return citation
