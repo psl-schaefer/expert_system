@@ -20,8 +20,6 @@ mamba activate paperqa-env
 python -m pip install git+https://github.com/Future-House/paper-qa
 ```
 
-- The original repository required API keys to retrieve metadata. In this fork, these API calls are optional, using Zotero metadata instead.
-
 3. Fork or clone this repository, set working directory (in Python session) to this directory:
 
 ```bash
@@ -71,10 +69,10 @@ from src.query_answer_index import query_answer_index
 from src.utils import pretty_print_text
 ```
 
-1. Since PaperQA uses LLMs, we either need to host one locally, or we need to provide API keys for cloud-based LLMs like DeepSeek or OpenAI. Here is a small code chunk to check whether API keys are set as environment variables.
+1. Since PaperQA uses LLMs, we either need to host one locally, or we need to provide API keys for cloud-based LLMs like DeepSeek, OpenAI, or Google Gemini. Here is a small code chunk to check whether/which API keys are set as environment variables.
 
 ```python
-API_KEYS = ["DEEPSEEK_API_KEY", "OPENAI_API_KEY"]
+API_KEYS = ["DEEPSEEK_API_KEY", "OPENAI_API_KEY", "GEMINI_API_KEY"]
 for api_key in API_KEYS:
     if (key := os.getenv(api_key)):
         print(f"{api_key} found")
@@ -96,16 +94,16 @@ manifest_file = data_dir / f"{export_directory_name}_manifest.csv"
 index_name = f"pqa_index_{export_directory_name}"
 
 processed_df = process_bibtex_and_pdfs(bibtex_file=bibtex_file, paper_directory=paper_directory)
-create_manifest_file(manifest_df=processed_df, manifest_file=manifest_file)
+create_manifest_file(manifest_df=processed_df, manifest_file=manifest_file, paper_directory=paper_directory)
 ```
 
 3. Next we need to specify all the PaperQA settings, e.g. I currently use the settings as shown below.
 
-    - I use the `deepseek/deepseek-chat` LLM, because it has good performance, and is cheaper than OpenAI models.
+    - I use the `gemini/gemini-2.0-flash` LLM, because it has good performance, and is cheaper than OpenAI models.
     - Apart from that, the settings are mostly default settings.
 
 ```python
-default_lmm = "deepseek/deepseek-chat" # see https://docs.litellm.ai/docs/providers/deepseek
+default_llm = "gemini/gemini-2.0-flash" 
 
 index_settings = IndexSettings(
     name = index_name,
@@ -118,7 +116,7 @@ index_settings = IndexSettings(
 )
 
 agent_settings = AgentSettings(
-    agent_llm = default_lmm, # smaller than default (bc cheaper)
+    agent_llm = default_llm, # smaller than default (bc cheaper)
     index = index_settings,
     index_concurrency = index_settings.concurrency
 )
@@ -133,8 +131,8 @@ answer_settings = AnswerSettings(
 settings = Settings(
     agent = agent_settings, 
     answer = answer_settings,
-    llm=default_lmm,
-    summary_llm=default_lmm, 
+    llm=default_llm,
+    summary_llm=default_llm, 
     embedding="text-embedding-3-small", # default
     temperature = 0.0, # default
     texts_index_mmr_lambda = 1.0, # Lambda MMR
